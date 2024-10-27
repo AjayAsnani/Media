@@ -21,7 +21,7 @@ require('dotenv').config(); // Load environment variables
 const authMiddleware = require('./middleware/authMiddleware');
 const approvedRoute = require('./routes/approved');
 const rejectRoute = require('./routes/rejectRoute.js');
-
+const userRoutes = require('./routes/userRoutes')
 
 const app = express();
 
@@ -86,6 +86,7 @@ app.use('/api/logout', logout);
 app.use('/api/users_email', userEmailRoute);
 app.use('/api/approve', approvedRoute);
 app.use('/api/reject', rejectRoute);
+app.use('/api/userdata',userRoutes)
 
 // Assuming you're using Express and Mongoose
 app.get('/api/users/pending', async (req, res) => {

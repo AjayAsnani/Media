@@ -1,44 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios'; // For making HTTP requests
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const MyAccountProfile = () => {
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
-    const email = localStorage.getItem('userEmail'); // Retrieve email from localStorage
-    if (!email) {
-      // console.error('No email found in localStorage');
-      return;
-    }
-    else{
-    }
-
     const fetchUserData = async () => {
+      const token = localStorage.getItem('authToken')?.trim(); // Retrieve and trim the token
+      
+      if (!token) {
+        console.log('No token found');
+        return; // Optionally redirect to login if no token is found
+      }
+    
       try {
-        // Make an API call to get user data by email
-        const response = await axios.get(`http://localhost:3001/api/users_email?email=${email}`);
-        if (response.data) {
-          setUserData(response.data); // Store user data in state
-        } else {
-          console.error('No user data found');
-        }
+        const response = await axios.get('http://localhost:3001/api/userdata', {
+          headers: {
+            'Authorization': `Bearer ${token}`, // Ensure "Bearer " prefix is included
+          },
+        });
+        setUserData(response.data.user); // Set user data from the response
+        console.log('User Data:', response.data.user); // For debugging
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error('Error fetching user data:', error.response?.data?.message || error.message);
       }
     };
-
-    fetchUserData();
-  }, []);
+  
+    fetchUserData(); // Call the fetchUserData function
+  }, []); // Dependency array to run once on component mount
+  
 
   if (!userData) {
     return <div>Loading...</div>; // Show loading indicator until data is fetched
   }
-  
 
   return (
-    
     <div className="flex items-center justify-center bg-gray-100">
-      
       <div className="bg-white shadow-lg p-6 w-full flex">
         {/* Left Side: Profile Picture and Name */}
         <div className="flex items-center">
@@ -62,11 +59,11 @@ const MyAccountProfile = () => {
           <div className="flex space-x-8">
             <div className="text-center">
               <h2 className="text-gray-600 font-semibold">Referrals</h2>
-              <p className="text-2xl font-bold text-gray-800">83</p>
+              <p className="text-2xl font-bold text-gray-800">{userData.referrals || 0}</p>
             </div>
             <div className="text-center">
               <h2 className="text-gray-600 font-semibold">Earnings</h2>
-              <p className="text-2xl font-bold text-gray-800">12,640.00 INR</p>
+              <p className="text-2xl font-bold text-gray-800">{userData.earnings || '0.00'} INR</p>
             </div>
           </div>
 
@@ -74,7 +71,7 @@ const MyAccountProfile = () => {
           <div className="mt-4">
             <p className="text-gray-500 mb-2">Until Senior Sales Officer Rank...</p>
             <div className="w-full bg-gray-300 rounded-full h-2">
-              <div className="bg-green-500 h-2 rounded-full" style={{ width: '70%' }}></div>
+              <div className="bg-green-500 h-2 rounded-full" style={{ width: `${userData.rankProgress || 0}%` }}></div>
             </div>
           </div>
         </div>

@@ -4,25 +4,21 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const router = express.Router();
-
-// Secret key for JWT (consider storing in environment variable for security)
-const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
+const JWT_SECRET = process.env.JWT_SECRET || 'your_fallback_secret_key';
 
 // Login Route
 router.post('/', async (req, res) => {
   const { email, password } = req.body;
-  
+
   try {
-    // Check if the user exists (case insensitive email query)
+    // Case-insensitive email search
     const user = await User.findOne({ email: new RegExp(`^${email}$`, 'i') }).select('+password');
-    
-    
-    // console.log(user);
+
     if (!user || !user.password) {
       return res.status(400).json({ message: 'Invalid email or password' });
     }
 
-    // Compare the provided password with the stored hashed password
+    // Compare password with hashed password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid email or password' });
@@ -30,16 +26,12 @@ router.post('/', async (req, res) => {
 
     // Generate JWT token
     const token = jwt.sign(
-      {
-        id: user._id,
-        email: user.email,
-        role: user.role
-      },
+      { id: user._id, email: user.email, role: user.role },
       JWT_SECRET,
-      { expiresIn: '1d' }  // Token expires in 1 day
+      { expiresIn: '1d' } // 1 day expiry
     );
 
-    // Respond with the JWT token
+    // Send JWT token
     res.status(200).json({ message: 'Login successful', token });
   } catch (err) {
     console.error('Error during login:', err.message);

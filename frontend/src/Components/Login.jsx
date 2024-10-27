@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaUser, FaLock } from 'react-icons/fa';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 import '../app.css';
 
-const Login = ({ prop }) => {
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -28,24 +28,21 @@ const Login = ({ prop }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
+        body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        // Store JWT token in localStorage
-        localStorage.setItem('authToken', data.token); // Save token securely
-
+        localStorage.setItem('authToken', data.token);
+        console.log(data)
         navigate('/accountPage');
       } else {
         setError(data.message || 'Invalid email or password.');
       }
     } catch (error) {
       setError('An error occurred. Please try again later.');
+      console.error('Login error:', error);
     } finally {
       setLoading(false);
     }
@@ -60,9 +57,7 @@ const Login = ({ prop }) => {
   return (
     <div className="flex items-center justify-center min-h-fit pt-20 pb-10">
       <div className="bg-white p-8 shadow-all rounded w-full max-w-md">
-        <h1 className={`text-4xl ${prop ? prop.fontColor : ""} font-bold ${prop ? prop.textalign : 'text-center'} mb-10`}>
-          LOGIN
-        </h1>
+        <h1 className="text-4xl font-bold text-center mb-10">LOGIN</h1>
 
         {/* Email Input */}
         <div className="flex items-center border border-gray-300 rounded mb-4 p-2">
@@ -91,11 +86,7 @@ const Login = ({ prop }) => {
             disabled={loading}
           />
           <button onClick={togglePasswordVisibility} className="focus:outline-none">
-            {showPassword ? (
-              <AiFillEye className="text-gray-500" />
-            ) : (
-              <AiFillEyeInvisible className="text-gray-500" />
-            )}
+            {showPassword ? <AiFillEye className="text-gray-500" /> : <AiFillEyeInvisible className="text-gray-500" />}
           </button>
         </div>
 

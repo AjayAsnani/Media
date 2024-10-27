@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import IntroBanner from '../Components/IntroBanner';
@@ -116,7 +116,7 @@ const RegisterPage = () => {
                 throw new Error('Failed to register');
             }
 
-            const result = await response.json();
+            // const result = await response.json();
             setSubmitMessage('Registration successful!');
             reset();  // Reset the form after successful registration
             localStorage.setItem('isRegistered', 'true');
