@@ -31,7 +31,9 @@ const userSchema = new mongoose.Schema({
   lastWithdrawal: { type: String },
   currentBalance: { type: Number, default: 0 },
   referredBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-  referPhoneNumber: { type: String } // Updated field for refer phone number
+  referPhoneNumber: { type: String }, // Updated field for refer phone number
+  totalIncome : { type:Number, default:0 },
+  totalRefers : { type:Number, default:0 }
 });
 
 // Create a User model

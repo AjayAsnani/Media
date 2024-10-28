@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 import Modal from 'react-modal';
 
@@ -57,7 +57,7 @@ const AdminPendingRegistration = () => {
                 const response = await fetch('http://localhost:3001/api/users/pending');
                 const data = await response.json();
                 setUsers(data);
-                
+
             } catch (error) {
                 console.error('Error fetching user data:', error);
             }
@@ -76,7 +76,7 @@ const AdminPendingRegistration = () => {
                     },
                     body: JSON.stringify({ email }),
                 });
-                
+
                 if (response.ok) {
                     alert(`${email}'s registration approved!`);
                     // window.location.reload();
@@ -277,15 +277,15 @@ const AdminPendingRegistration = () => {
                             src={currentImage}
                             alt="Current"
                             style={{
-                                transform: `scale(${zoomLevel})`,
+                                transform: `translate(-50%, -50%) scale(${zoomLevel})`,
                                 transition: 'transform 0.3s ease',
                                 position: 'absolute',
                                 left: '50%',
                                 top: '50%',
                                 transformOrigin: 'center center', // Center the image for scaling
-                                transform: `translate(-50%, -50%) scale(${zoomLevel})`,
                             }}
                         />
+
                     </div>
                     <div className="flex mt-4">
                         <button onClick={zoomOut} className="mb-2 bg-gray-300 px-2 py-1 rounded mr-2">

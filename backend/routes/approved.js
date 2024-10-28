@@ -49,7 +49,7 @@ router.post('/', async (req, res) => {
         if (directReferrer) {
             await User.findByIdAndUpdate(
                 directReferrer._id,
-                { $inc: { currentBalance: 500 } },
+                { $inc: { currentBalance: 500, totalIncome: 500, totalRefers:1} },
                 { session }
             );
         }
@@ -61,7 +61,7 @@ router.post('/', async (req, res) => {
             if (indirectReferrerId.toString() !== directReferrer._id.toString()) {
                 await User.findByIdAndUpdate(
                     indirectReferrerId,
-                    { $inc: { currentBalance: 20 } },
+                    { $inc: { currentBalance: 20, totalIncome: 20,totalRefers: 1 } },
                     { session }
                 );
             }
